@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String // Store hashed password
+  role      String   @default("CLIENT") // ADMIN or CLIENT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sites     TenantSite[]
+}
+
+model TenantSite {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  slug        String   @unique // URL slug e.g. /sites/my-store
+  siteName    String
+  themeColor  String   @default("#2563eb")
+  status      String   @default("ACTIVE") // ACTIVE, SUSPENDED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products    Product[]
+  reservations Reservation[]
+}
+
+model Product {
+  id          String     @id @default(cuid())
+  siteId      String
+  site        TenantSite @relation(fields: [siteId], references: [id])
+  name        String
+  description String?
+  price       Float
+  imageUrl    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Reservation {
+  id          String     @id @default(cuid())
+  siteId      String
+  site        TenantSite @relation(fields: [siteId], references: [id])
+  customerName String
+  customerEmail String
+  date        DateTime
+  status      String     @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
