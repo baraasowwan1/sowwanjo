@@ -134,7 +134,7 @@ export default function TenantSite({ params }: { params: { tenantSlug: string } 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                <input type="text" required className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:outline-none" style={{ focusRingColor: data.themeColor }} />
+                <input type="text" required className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:outline-none" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
