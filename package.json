@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && prisma db push && next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate && prisma db push"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "14.2.3",
@@ -16,6 +15,9 @@
     "lucide-react": "^0.487.0",
     "framer-motion": "^11.2.6",
     "@prisma/client": "^5.14.0",
+    "next-auth": "^4.24.7",
+    "bcryptjs": "^2.4.3",
+    "@paypal/react-paypal-js": "^8.3.0",
     "@radix-ui/react-accordion": "1.2.3",
     "@radix-ui/react-alert-dialog": "1.1.6",
     "@radix-ui/react-aspect-ratio": "1.1.2",
@@ -69,6 +71,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/bcryptjs": "^2.4.6",
     "postcss": "^8",
     "autoprefixer": "^10.4.19",
     "tailwindcss": "^3.4.1",
