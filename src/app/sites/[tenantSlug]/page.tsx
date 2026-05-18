@@ -26,10 +26,21 @@ export default function TenantSite({ params }: { params: { tenantSlug: string } 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [data, setData] = useState<any>(null);
 
+  const [isSuspended, setIsSuspended] = useState(false);
+
   useEffect(() => {
     async function loadData() {
       const dbSite = await getSiteConfig(params.tenantSlug);
+      
       if (dbSite) {
+        // Enforce Status & Expiration
+        const isExpired = dbSite.expiresAt && new Date(dbSite.expiresAt) < new Date();
+        if (dbSite.status === "SUSPENDED" || isExpired) {
+          setIsSuspended(true);
+          setData(null);
+          return;
+        }
+
         setData({
           ...defaultData,
           name: dbSite.siteName,
@@ -43,6 +54,23 @@ export default function TenantSite({ params }: { params: { tenantSlug: string } 
     }
     loadData();
   }, [params.tenantSlug]);
+
+  if (isSuspended) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-3xl shadow-xl text-center max-w-md border border-gray-100">
+          <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <X className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl font-bold mb-2">Site Unavailable</h1>
+          <p className="text-gray-500 mb-6">This website is currently suspended or its subscription has expired. Please contact the site owner or administrator.</p>
+          <a href="/" className="inline-block bg-gray-900 text-white font-medium px-6 py-3 rounded-full hover:bg-gray-800 transition-colors">
+            Return to Sowwan Platform
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   if (!data) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>;
