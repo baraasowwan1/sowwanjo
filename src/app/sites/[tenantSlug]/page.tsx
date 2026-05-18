@@ -122,7 +122,7 @@ export default function TenantSite({ params }: { params: { tenantSlug: string } 
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {data.products.map(product => (
+            {data.products.map((product: any) => (
               <div key={product.id} className="group rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 bg-white">
                 <div className="aspect-square bg-gray-100 relative overflow-hidden">
                   <img src={product.image} alt={product.name} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
