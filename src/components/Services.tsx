@@ -1,5 +1,5 @@
 "use client";
-import { Search, Target, TrendingUp, ChartBar, Zap, Users } from 'lucide-react';
+import { Search, Target, TrendingUp, BarChart, Zap, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
 const services = [
@@ -22,7 +22,7 @@ const services = [
     features: ['Google Analytics', 'Performance Metrics', 'Custom Reports', 'ROI Analysis']
   },
   {
-    icon: ChartBar,
+    icon: BarChart,
     title: 'Content Marketing',
     description: 'Engage your audience with high-quality, SEO-optimized content that drives results and builds brand authority.',
     features: ['Content Strategy', 'Blog Posts', 'SEO Copywriting', 'Content Calendar']
