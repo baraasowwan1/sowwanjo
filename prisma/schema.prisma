@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -24,7 +24,9 @@ model TenantSite {
   user        User     @relation(fields: [userId], references: [id])
   slug        String   @unique // URL slug e.g. /sites/my-store
   siteName    String
+  headline    String   @default("Welcome to our store")
   themeColor  String   @default("#2563eb")
+  font        String   @default("Inter, sans-serif")
   status      String   @default("ACTIVE") // ACTIVE, SUSPENDED
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
