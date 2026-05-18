@@ -1,7 +1,7 @@
 "use client";
-
 import { useState } from 'react';
 import { Save, Layout, Palette, Type, Image as ImageIcon, Settings } from 'lucide-react';
+import { saveSiteConfig } from '@/app/actions/site';
 
 export default function SiteBuilder() {
   const [siteData, setSiteData] = useState({
@@ -10,9 +10,24 @@ export default function SiteBuilder() {
     themeColor: '#2563eb',
     font: 'Inter',
   });
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
-    alert("Site configuration saved! In a real app, this would update the database.");
+  const handleSave = async () => {
+    setIsSaving(true);
+    const result = await saveSiteConfig({
+      tenantSlug: 'my-demo-site',
+      name: siteData.name,
+      headline: siteData.headline,
+      themeColor: siteData.themeColor,
+      font: siteData.font
+    });
+    
+    setIsSaving(false);
+    if (result.success) {
+      alert("Success! Your site is now live with the new settings.");
+    } else {
+      alert("Error saving site configuration.");
+    }
   };
 
   return (
