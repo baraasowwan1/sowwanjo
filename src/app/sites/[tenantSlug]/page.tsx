@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from 'react';
-import { ShoppingCart, Calendar, MapPin, Phone, Mail, Menu, X, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ShoppingCart, Calendar, MapPin, Phone, Mail, Menu, X, ArrowRight, Loader2 } from 'lucide-react';
+import { getSiteConfig } from '@/app/actions/site';
 
-// Mock data representing what would be fetched from the database for `params.tenantSlug`
-const mockSiteData = {
+// Fallback mock data if DB is empty
+const defaultData = {
   name: "My Demo Site",
   headline: "Welcome to our amazing store",
   description: "We offer the best products and services in town. Book a reservation or shop online today.",
@@ -13,18 +14,39 @@ const mockSiteData = {
   products: [
     { id: 1, name: 'Premium SEO Audit', price: 299.99, image: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=400&q=80' },
     { id: 2, name: 'Consultation Hour', price: 150.00, image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&q=80' },
-    { id: 3, name: 'Website Theme Pack', price: 49.99, image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80' },
   ],
   contact: {
     email: "hello@mydemosite.com",
     phone: "+1 (555) 123-4567",
-    address: "123 Business Avenue, Suite 100"
+    address: "123 Business Avenue"
   }
 };
 
 export default function TenantSite({ params }: { params: { tenantSlug: string } }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const data = mockSiteData; // In production: fetch from DB based on params.tenantSlug
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      const dbSite = await getSiteConfig(params.tenantSlug);
+      if (dbSite) {
+        setData({
+          ...defaultData,
+          name: dbSite.siteName,
+          headline: dbSite.headline,
+          themeColor: dbSite.themeColor,
+          font: dbSite.font,
+        });
+      } else {
+        setData(defaultData); // Fallback if site not found in DB
+      }
+    }
+    loadData();
+  }, [params.tenantSlug]);
+
+  if (!data) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>;
+  }
 
   return (
     <div style={{ fontFamily: data.font }} className="flex flex-col min-h-screen text-gray-900">
