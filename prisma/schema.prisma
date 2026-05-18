@@ -16,6 +16,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   sites     TenantSite[]
+  subscriptions Subscription[]
 }
 
 model TenantSite {
@@ -28,11 +29,23 @@ model TenantSite {
   themeColor  String   @default("#2563eb")
   font        String   @default("Inter, sans-serif")
   status      String   @default("ACTIVE") // ACTIVE, SUSPENDED
+  expiresAt   DateTime? // Subscription expiration date
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   products    Product[]
   reservations Reservation[]
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  plan      String   // MONTHLY or ANNUAL
+  status    String   @default("PENDING") // ACTIVE, PENDING, CANCELLED
+  paypalId  String?  // To store PayPal subscription/order ID later
+  startDate DateTime @default(now())
+  endDate   DateTime?
 }
 
 model Product {
